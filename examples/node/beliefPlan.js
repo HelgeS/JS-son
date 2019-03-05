@@ -2,7 +2,7 @@
 We import js-son and assign Belief, Plan, Agent, and Environment to sepearate consts for the sake of
 convenience:
 */
-const { Belief, Plan, Agent, Environment } = require('js-son-agent')
+const { Belief, Plan, Agent, Environment } = require('js-son-agent');
 
 /*
 Basic example of using the basic belief-plan approach with JSson
@@ -29,7 +29,7 @@ Also, nobody has so far requested any change in door state (``requests: []``).
 const beliefs = {
   ...Belief('door', { locked: true }),
   ...Belief('requests', [])
-}
+};
 
 /*
 First, we define the porter agent.
@@ -50,14 +50,14 @@ const plansPorter = [
     beliefs => beliefs.door.locked && beliefs.requests.includes('unlock'),
     () => [{ door: 'unlock' }]
   )
-]
+];
 
 /*
 We instantiate a new agent with the belief set and plans.
 Because we are not making use of  *desires* in this simple belief-plan scenario , we pass an empty
 object as the agent's desires:
 */
-const porter = new Agent('porter', beliefs, {}, plansPorter)
+const porter = new Agent('porter', beliefs, {}, plansPorter);
 
 /*
 Next, we create the paranoid agent with the following plans:
@@ -78,9 +78,9 @@ const plansParanoid = [
     beliefs => beliefs.door.locked,
     () => [{ announce: 'Thanks for locking the door!' }]
   )
-]
+];
 
-const paranoid = new Agent('paranoid', beliefs, {}, plansParanoid)
+const paranoid = new Agent('paranoid', beliefs, {}, plansParanoid);
 
 /*
 The last agent we create is the *paranoid* one.
@@ -102,9 +102,9 @@ const plansClaustrophobe = [
     beliefs => !beliefs.door.locked,
     () => [{ announce: 'Thanks for unlocking the door!' }]
   )
-]
+];
 
-const claustrophobe = new Agent('claustrophobe', beliefs, {}, plansClaustrophobe)
+const claustrophobe = new Agent('claustrophobe', beliefs, {}, plansClaustrophobe);
 
 /*
 Now, as we have the agents defined, we need to specify the environment.
@@ -113,7 +113,7 @@ First, we set the environments state, which is--in our case--consistent with the
 const state = {
   door: { locked: true },
   requests: []
-}
+};
 
 /*
 To define how the environment processes agent actions, we implement the ``updateState`` function.
@@ -124,32 +124,32 @@ the environment's state update that is merged into the new state
 const updateState = (actions, agentId, currentState) => {
   const stateUpdate = {
     requests: currentState.requests
-  }
+  };
   actions.forEach(action => {
     if (action.some(action => action.door === 'lock')) {
-      stateUpdate.door = { locked: true }
-      stateUpdate.requests = []
-      console.log(`${agentId}: Lock door`)
+      stateUpdate.door = { locked: true };
+      stateUpdate.requests = [];
+      console.log(`${agentId}: Lock door`);
     }
     if (action.some(action => action.door === 'unlock')) {
-      stateUpdate.door = { locked: false }
-      stateUpdate.requests = []
-      console.log(`${agentId}: Unlock door`)
+      stateUpdate.door = { locked: false };
+      stateUpdate.requests = [];
+      console.log(`${agentId}: Unlock door`);
     }
     if (action.some(action => action.request === 'lock')) {
-      stateUpdate.requests.push('lock')
-      console.log(`${agentId}: Request: lock door`)
+      stateUpdate.requests.push('lock');
+      console.log(`${agentId}: Request: lock door`);
     }
     if (action.some(action => action.request === 'unlock')) {
-      stateUpdate.requests.push('unlock')
-      console.log(`${agentId}: Request: unlock door`)
+      stateUpdate.requests.push('unlock');
+      console.log(`${agentId}: Request: unlock door`);
     }
     if (action.some(action => action.announce)) {
-      console.log(`${agentId}: ${action.find(action => action.announce).announce}`)
+      console.log(`${agentId}: ${action.find(action => action.announce).announce}`);
     }
-  })
-  return stateUpdate
-}
+  });
+  return stateUpdate;
+};
 
 /*
 To simulate a partially observable world, we can specify the environment's ``stateFilter`` function,
@@ -157,7 +157,7 @@ which determines how the state update should be shared with the agents.
 However, in our case we simply communicate the whole state update to all agents,
 which is also the default behavior of the environment, if no ``stateFilter`` function is specified.
 */
-const stateFilter = state => state
+const stateFilter = state => state;
 
 /* We instantiate the environment with the specified agents, state, update function, and filter
 function:
@@ -167,7 +167,7 @@ const environment = new Environment(
   state,
   updateState,
   stateFilter
-)
+);
 
 // Finally, we run 20 iterations of the scenario:
-environment.run(20)
+environment.run(20);

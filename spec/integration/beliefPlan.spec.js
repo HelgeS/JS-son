@@ -2,50 +2,50 @@
 const {
   Agent,
   Environment
-} = require('../../src/js-son')
+} = require('../../src/js-son');
 
 const {
   beliefs,
   desires,
   preferenceFunctionGen,
   plans
-} = require('../mocks/human')
+} = require('../mocks/human');
 
 const {
   dogBeliefs,
   dogDesires,
   dogPreferenceFunctionGen,
   dogPlans
-} = require('../mocks/dog')
+} = require('../mocks/dog');
 
 describe('Integration: belief-plan approach', () => {
-  const human = new Agent('human', beliefs, desires, plans, preferenceFunctionGen)
-  const dog = new Agent('dog', dogBeliefs, dogDesires, dogPlans, dogPreferenceFunctionGen)
+  const human = new Agent('human', beliefs, desires, plans, preferenceFunctionGen);
+  const dog = new Agent('dog', dogBeliefs, dogDesires, dogPlans, dogPreferenceFunctionGen);
 
   const state = {
     dogNice: true,
     dogHungry: true,
     foodAvailable: false,
     dogRecentlyPraised: false
-  }
+  };
 
   const updateMAS = actions => {
-    const stateUpdate = {}
+    const stateUpdate = {};
     actions.forEach(action => {
-      if (action.actions.includes('Here, take some food!')) stateUpdate.foodAvailable = true
-      if (action.actions.includes('Good dog!')) stateUpdate.dogRecentlyPraised = true
-      else stateUpdate.dogRecentlyPraised = false
+      if (action.actions.includes('Here, take some food!')) stateUpdate.foodAvailable = true;
+      if (action.actions.includes('Good dog!')) stateUpdate.dogRecentlyPraised = true;
+      else stateUpdate.dogRecentlyPraised = false;
       if (action.actions.includes('Eat')) {
-        stateUpdate.foodAvailable = false
-        stateUpdate.dogHungry = false
+        stateUpdate.foodAvailable = false;
+        stateUpdate.dogHungry = false;
       }
-    })
-    return stateUpdate
-  }
-  const environment = new Environment([human, dog], state, updateMAS)
+    });
+    return stateUpdate;
+  };
+  const environment = new Environment([human, dog], state, updateMAS);
 
   it('Should allow agent-to-agent interaction', () => {
-    const history = environment.run(1)
+    const history = environment.run(1);
     const expectedHistory = [{
       dogNice: true,
       dogHungry: true,
@@ -56,7 +56,7 @@ describe('Integration: belief-plan approach', () => {
       dogHungry: false,
       foodAvailable: false,
       dogRecentlyPraised: false
-    }]
-    expect(history).toEqual(expectedHistory)
-  })
-})
+    }];
+    expect(history).toEqual(expectedHistory);
+  });
+});

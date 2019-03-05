@@ -6,10 +6,10 @@
  * @returns {array} JS-son agent intentions
  */
 const Intentions = (beliefs, desires, preferenceFunctionGenerator) => {
-  const intentions = {}
-  const intentionKeys = Object.keys(desires).filter(preferenceFunctionGenerator(beliefs, desires))
-  intentionKeys.forEach(intentionKey => (intentions[intentionKey] = desires[intentionKey](beliefs)))
-  return intentions
-}
+  const intentions = {};
+  const intentionKeys = Object.keys(desires).filter(preferenceFunctionGenerator(beliefs, desires));
+  intentionKeys.forEach(intentionKey => (intentions[intentionKey] = desires[intentionKey](beliefs)));
+  return intentions;
+};
 
-module.exports = Intentions
+module.exports = Intentions;

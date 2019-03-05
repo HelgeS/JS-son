@@ -1,4 +1,4 @@
-const warning = 'JS-son: Created belief with non-JSON object, non-JSON data type value'
+const warning = 'JS-son: Created belief with non-JSON object, non-JSON data type value';
 
 /**
  * JS-son agent belief generator
@@ -7,17 +7,17 @@ const warning = 'JS-son: Created belief with non-JSON object, non-JSON data type
  * @returns {object} JS-son agent belief
  */
 const Belief = (id, value) => {
-  const belief = {}
-  belief[id] = value
+  const belief = {};
+  belief[id] = value;
   try {
-    const parsedBelief = JSON.parse(JSON.stringify(belief))
+    const parsedBelief = JSON.parse(JSON.stringify(belief));
     if (Object.keys(parsedBelief).length !== Object.keys(belief).length) {
-      console.warn(warning)
+      console.warn(warning);
     }
   } catch (error) {
-    console.warn(warning)
+    console.warn(warning);
   }
-  return belief
-}
+  return belief;
+};
 
-module.exports = Belief
+module.exports = Belief;

@@ -1,4 +1,4 @@
-const warning = 'JS-son: desire body should be a function'
+const warning = 'JS-son: desire body should be a function';
 
 /**
  * JS-son agent desire generator
@@ -8,10 +8,10 @@ const warning = 'JS-son: desire body should be a function'
  * @returns {object} JS-son agent desire
  */
 const Desire = (id, body) => {
-  if (typeof (body) !== 'function') console.warn(warning)
-  const desire = {}
-  desire[id] = body
-  return desire
-}
+  if (typeof (body) !== 'function') console.warn(warning);
+  const desire = {};
+  desire[id] = body;
+  return desire;
+};
 
-module.exports = Desire
+module.exports = Desire;

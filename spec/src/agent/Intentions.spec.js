@@ -1,24 +1,24 @@
-const Belief = require('../../../src/agent/Belief')
-const Intentions = require('../../../src/agent/Intentions')
+const Belief = require('../../../src/agent/Belief');
+const Intentions = require('../../../src/agent/Intentions');
 
 const {
   desires
-} = require('../../mocks/human')
+} = require('../../mocks/human');
 
 describe('Intentions()', () => {
-  const beliefs = { ...Belief('dogNice', true), ...Belief('dogHungry', true) }
+  const beliefs = { ...Belief('dogNice', true), ...Belief('dogHungry', true) };
 
   it('should filter intentions according to provided preference function', () => {
     const preferenceFunctionGen = (beliefs, desires) => (desireKey) => {
       if (!desires[desireKey](beliefs)) {
-        return false
+        return false;
       } else if (desireKey === 'feedDog' || !desires['feedDog'](beliefs)) {
-        return true
+        return true;
       } else {
-        return false
+        return false;
       }
-    }
-    const intentions = Intentions(beliefs, desires, preferenceFunctionGen)
-    expect(Object.keys(intentions)).toEqual(['feedDog'])
-  })
-})
+    };
+    const intentions = Intentions(beliefs, desires, preferenceFunctionGen);
+    expect(Object.keys(intentions)).toEqual(['feedDog']);
+  });
+});

@@ -5,6 +5,6 @@ const JSson = {
   Plan: require('./agent/Plan'),
   Agent: require('./agent/Agent'),
   Environment: require('./environment/Environment')
-}
+};
 
-module.exports = JSson
+module.exports = JSson;

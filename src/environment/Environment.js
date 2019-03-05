@@ -14,37 +14,37 @@ function Environment (
   render = state => console.log(state),
   stateFilter = state => state
 ) {
-  this.agents = {}
-  agents.forEach(agent => (this.agents[agent.id] = agent))
-  this.state = state
-  this.update = update
-  this.render = render
-  this.stateFilter = stateFilter
-  this.history = []
-  this.reset = () => (this.history = [])
+  this.agents = {};
+  agents.forEach(agent => (this.agents[agent.id] = agent));
+  this.state = state;
+  this.update = update;
+  this.render = render;
+  this.stateFilter = stateFilter;
+  this.history = [];
+  this.reset = () => (this.history = []);
   this.run = iterations => {
-    this.history.push(this.state)
+    this.history.push(this.state);
     const run = () => {
       Object.keys(this.agents).forEach(agentKey => {
         const proposedUpdate = this.agents[agentKey].next(
           this.stateFilter(this.state, agentKey, this.agents[agentKey].beliefs)
-        )
-        const stateUpdate = this.update(proposedUpdate, agentKey, this.state)
+        );
+        const stateUpdate = this.update(proposedUpdate, agentKey, this.state);
         this.state = {
           ...this.state,
           ...stateUpdate
-        }
-      })
-      this.history.push(this.state)
-      this.render(this.state)
-    }
+        };
+      });
+      this.history.push(this.state);
+      this.render(this.state);
+    };
     if (iterations) {
-      Array(iterations).fill(0).forEach(run)
+      Array(iterations).fill(0).forEach(run);
     } else {
-      while (true) run()
+      while (true) run();
     }
-    return this.history
-  }
+    return this.history;
+  };
 }
 
-module.exports = Environment
+module.exports = Environment;

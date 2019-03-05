@@ -1,13 +1,13 @@
-import $$ from 'dom7'
-import Framework7 from 'framework7/framework7.esm.bundle.js'
-import 'framework7/css/framework7.bundle.css'
+import $$ from 'dom7';
+import Framework7 from 'framework7/framework7.esm.bundle.js';
+import 'framework7/css/framework7.bundle.css';
 // Icons and App Custom Styles
-import '../css/icons.css'
-import '../css/app.css'
+import '../css/icons.css';
+import '../css/app.css';
 // Import Routes
-import routes from './routes.js'
+import routes from './routes.js';
 // Game of Life
-import GameOfLife from './GameOfLife'
+import GameOfLife from './GameOfLife';
 
 var app = new Framework7({ // eslint-disable-line no-unused-vars
   root: '#app', // App root element
@@ -17,21 +17,21 @@ var app = new Framework7({ // eslint-disable-line no-unused-vars
   // App root data
   data: () => {
     $$(document).on('page:init', e => {
-      let gameOfLife = GameOfLife()
-      let shouldRestart = false
+      let gameOfLife = GameOfLife();
+      let shouldRestart = false;
       $$('.restart-button').on('click', () => {
-        shouldRestart = true
-      })
+        shouldRestart = true;
+      });
       window.setInterval(() => {
         if (shouldRestart) {
-          shouldRestart = false
-          gameOfLife = GameOfLife()
+          shouldRestart = false;
+          gameOfLife = GameOfLife();
         } else {
-          gameOfLife.run(1)
+          gameOfLife.run(1);
         }
-      }, 500)
-    })
+      }, 500);
+    });
   },
   // App routes
   routes: routes
-})
+});

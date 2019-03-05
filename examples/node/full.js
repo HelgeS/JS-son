@@ -36,18 +36,18 @@ const {
   Plan,
   Agent,
   Environment
-} = require('js-son-agent')
+} = require('js-son-agent');
 
 // Then, we create the belief sets the agents start with:
 const beliefsTrue = {
   ...Belief('keyBelief', true),
   ...Belief('pastReceivedAnnouncements', [])
-}
+};
 
 const beliefsFalse = {
   ...Belief('keyBelief', false),
   ...Belief('pastReceivedAnnouncements', [])
-}
+};
 
 /*
 Now, we define the desires of the two agent types. Both agents base their announcement desires on
@@ -61,48 +61,48 @@ decision.
 const determinePredominantBelief = beliefs => {
   const announcementsTrue = beliefs.pastReceivedAnnouncements.filter(
     announcement => announcement
-  ).length
+  ).length;
   const announcementsFalse = beliefs.pastReceivedAnnouncements.filter(
     announcement => !announcement
-  ).length
+  ).length;
   const predominantBelief = announcementsTrue > announcementsFalse ||
-    (announcementsTrue === announcementsFalse && beliefs.keyBelief)
-  return predominantBelief
-}
+    (announcementsTrue === announcementsFalse && beliefs.keyBelief);
+  return predominantBelief;
+};
 
 const desiresVolatile = {
   ...Desire('announceTrue', beliefs => {
     const pastReceivedAnnouncements = beliefs.pastReceivedAnnouncements.length >= 5
       ? beliefs.pastReceivedAnnouncements.slice(-5)
-      : new Array(5).fill(beliefs.keyBelief)
+      : new Array(5).fill(beliefs.keyBelief);
     const recentBeliefs = {
       ...beliefs,
       pastReceivedAnnouncements
-    }
-    return determinePredominantBelief(recentBeliefs)
+    };
+    return determinePredominantBelief(recentBeliefs);
   }),
   ...Desire('announceFalse', beliefs => {
     const pastReceivedAnnouncements = beliefs.pastReceivedAnnouncements.length >= 5
       ? beliefs.pastReceivedAnnouncements.slice(-5)
-      : new Array(5).fill(beliefs.keyBelief)
+      : new Array(5).fill(beliefs.keyBelief);
     const recentBeliefs = {
       ...beliefs,
       pastReceivedAnnouncements
-    }
-    return !determinePredominantBelief(recentBeliefs)
+    };
+    return !determinePredominantBelief(recentBeliefs);
   })
-}
+};
 
 const desiresIntrospective = {
   ...Desire('announceTrue', beliefs => determinePredominantBelief(beliefs)),
   ...Desire('announceFalse', beliefs => !determinePredominantBelief(beliefs))
-}
+};
 
 /*
 The agents desires are mutually exclusive. Hence, the agents' intentions merely relay their desires,
 which is reflected in the following preference function generator:
 */
-const preferenceFunctionGen = (beliefs, desires) => desireKey => desires[desireKey](beliefs)
+const preferenceFunctionGen = (beliefs, desires) => desireKey => desires[desireKey](beliefs);
 
 /*
 The agents' plans are to disseminate the announcement (``true`` or ``false``) as determined by the
@@ -112,13 +112,13 @@ desire functions:
 const plans = [
   Plan(intentions => intentions.announceTrue, () => [ { announce: true } ]),
   Plan(intentions => intentions.announceFalse, () => [ { announce: false } ])
-]
+];
 
 /*
 Before we instantiate the agents, we need to create an object for the environment's initial state.
 The object will be populated when the agents will be created:
 */
-const state = {}
+const state = {};
 
 /*
 To instantiate the agents according to the scenario specification, we create the following function:
@@ -127,15 +127,15 @@ To instantiate the agents according to the scenario specification, we create the
 const createAgents = () => {
   const agents = new Array(100).fill({}).map((_, index) => {
     // assign agent types--introspective and volatile--to odd and even numbers, respectively:
-    const type = index % 2 === 0 ? 'volatile' : 'introspective'
-    const desires = type === 'volatile' ? desiresVolatile : desiresIntrospective
+    const type = index % 2 === 0 ? 'volatile' : 'introspective';
+    const desires = type === 'volatile' ? desiresVolatile : desiresIntrospective;
     /* ``true`` as belief: 30 volatile and 20 introspective agents
        ``false`` as belief: 20 volatile and 30 introspective agents:
     */
     const beliefs = (index < 50 && index % 2 === 0) || (index < 40 && index % 2 !== 0) ? beliefsTrue
-      : beliefsFalse
+      : beliefsFalse;
     // add agent belief to the environment's state:
-    state[`${type}${index}`] = { keyBelief: beliefs.keyBelief }
+    state[`${type}${index}`] = { keyBelief: beliefs.keyBelief };
     // create agent:
     return new Agent(
       `${type}${index}`,
@@ -143,17 +143,17 @@ const createAgents = () => {
       desires,
       plans,
       preferenceFunctionGen
-    )
-  })
+    );
+  });
   const numberBeliefsTrue = Object.keys(state).filter(
     agentId => state[agentId].keyBelief
-  ).length
+  ).length;
   const numberBeliefsFalse = Object.keys(state).filter(
     agentId => !state[agentId].keyBelief
-  ).length
-  console.log(`True: ${numberBeliefsTrue}; False: ${numberBeliefsFalse}`)
-  return agents
-}
+  ).length;
+  console.log(`True: ${numberBeliefsTrue}; False: ${numberBeliefsFalse}`);
+  return agents;
+};
 
 /*
 To define how the environment processes agent actions, we implement the ``updateState`` function.
@@ -162,14 +162,14 @@ the environment's state update that is merged into the new state
 ``state = { ...state, ...stateUpdate }``:
 */
 const updateState = (actions, agentId, currentState) => {
-  const stateUpdate = {}
+  const stateUpdate = {};
   actions.forEach(action => {
     stateUpdate[agentId] = {
       keyBelief: action.find(action => action.announce !== undefined).announce
-    }
-  })
-  return stateUpdate
-}
+    };
+  });
+  return stateUpdate;
+};
 
 /*
 We simulate a partially observable world: via the environment's ``stateFilter`` function, we
@@ -179,33 +179,33 @@ function pseudo-randomly picks 3 announcements of volatile agents and 2 announce
 introspective agents. In addition, we add bias that facilitates ``true`` announcements:
 */
 const stateFilter = (state, agentKey, agentBeliefs) => {
-  const volatileAnnouncements = []
-  const introspectiveAnnouncements = []
+  const volatileAnnouncements = [];
+  const introspectiveAnnouncements = [];
   Object.keys(state).forEach(key => {
     if (key.includes('volatile')) {
-      volatileAnnouncements.push(state[key].keyBelief)
+      volatileAnnouncements.push(state[key].keyBelief);
     } else {
-      introspectiveAnnouncements.push(state[key].keyBelief)
+      introspectiveAnnouncements.push(state[key].keyBelief);
     }
-  })
+  });
   const recentVolatileAnnouncements = volatileAnnouncements.sort(
     () => 0.5 - Math.random()
-  ).slice(0, 3)
+  ).slice(0, 3);
   const recentIntrospectiveAnnouncements = introspectiveAnnouncements.sort(
     () => 0.5 - Math.random()
-  ).slice(0, 2)
+  ).slice(0, 2);
   // add some noise
   let noise = Object.keys(state).filter(
-    agentId => state[agentId].keyBelief).length < 50 * Math.random() ? [true] : []
+    agentId => state[agentId].keyBelief).length < 50 * Math.random() ? [true] : [];
   noise = Object.keys(state).filter(agentId => state[agentId].keyBelief).length < 29 * Math.random()
-    ? [false] : noise
+    ? [false] : noise;
   // combine announcements
   const pastReceivedAnnouncements =
     recentVolatileAnnouncements.concat(
       recentIntrospectiveAnnouncements, agentBeliefs.pastReceivedAnnouncements, noise
-    )
-  return { pastReceivedAnnouncements, keyBelief: state[agentKey].keyBelief }
-}
+    );
+  return { pastReceivedAnnouncements, keyBelief: state[agentKey].keyBelief };
+};
 
 /*
 The last function we need is ``render()``. In our case, we simply log the number of announcements
@@ -214,12 +214,12 @@ of ``true`` and ``false`` to the console:
 const render = state => {
   const numberBeliefsTrue = Object.keys(state).filter(
     agentId => state[agentId].keyBelief
-  ).length
+  ).length;
   const numberBeliefsFalse = Object.keys(state).filter(
     agentId => !state[agentId].keyBelief
-  ).length
-  console.log(`True: ${numberBeliefsTrue}; False: ${numberBeliefsFalse}`)
-}
+  ).length;
+  console.log(`True: ${numberBeliefsTrue}; False: ${numberBeliefsFalse}`);
+};
 
 /* We instantiate the environment with the specified agents, state, update function, render
 function, and filter function:
@@ -230,7 +230,7 @@ const environment = new Environment(
   updateState,
   render,
   stateFilter
-)
+);
 
 // Finally, we run 50 iterations of the scenario:
-environment.run(50)
+environment.run(50);

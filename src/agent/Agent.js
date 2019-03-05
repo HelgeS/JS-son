@@ -1,4 +1,4 @@
-const Intentions = require('./Intentions')
+const Intentions = require('./Intentions');
 
 /**
  * JS-son agent generation function
@@ -11,32 +11,32 @@ const Intentions = require('./Intentions')
  */
 
 function Agent (id, beliefs, desires, plans, determinePreferences) {
-  this.id = id
-  this.beliefs = beliefs
-  this.desires = desires
-  this.plans = plans
-  this.preferenceFunction = determinePreferences
-  this.isActive = true
+  this.id = id;
+  this.beliefs = beliefs;
+  this.desires = desires;
+  this.plans = plans;
+  this.preferenceFunction = determinePreferences;
+  this.isActive = true;
   this.next = function (beliefs) {
     this.beliefs = {
       ...this.beliefs,
       ...beliefs
-    }
+    };
     if (this.isActive) {
       if (Object.keys(desires).length === 0 && determinePreferences === undefined) {
-        this.intentions = this.beliefs
+        this.intentions = this.beliefs;
       } else {
-        this.intentions = Intentions(this.beliefs, this.desires, this.preferenceFunction)
+        this.intentions = Intentions(this.beliefs, this.desires, this.preferenceFunction);
       }
       return this.plans.map(
         plan => plan.run(this.intentions)
       ).filter(
         result => result !== null
-      )
+      );
     }
-  }
-  this.stop = () => (this.isActive = false)
-  this.start = () => (this.isActive = true)
+  };
+  this.stop = () => (this.isActive = false);
+  this.start = () => (this.isActive = true);
 }
 
-module.exports = Agent
+module.exports = Agent;
