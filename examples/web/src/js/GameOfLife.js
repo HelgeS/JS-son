@@ -24,7 +24,7 @@ const determineNeighborActivity = (index, activityArray) => {
   return [
     activityArray[index - 10],
     activityArray[index + 10]
-  ].concat(leftNeighbors, rightNeighbors).filter(element => element).length;
+  ].concat(leftNeighbors, rightNeighbors).filter(element => { return element; }).length;
 };
 
 const plans = [
@@ -35,7 +35,7 @@ const plans = [
       return (isActive && neighborActivity >= 2 && neighborActivity < 4) ||
         neighborActivity === 3;
     },
-    () => ({ nextRound: 'active' })
+    () => { return { nextRound: 'active' }; }
   ),
   Plan(
     beliefs => {
@@ -44,33 +44,37 @@ const plans = [
       return !(isActive && neighborActivity >= 2 && neighborActivity < 4) &&
         !neighborActivity === 3;
     },
-    () => ({ nextRound: 'inActive' })
+    () => { return { nextRound: 'inActive' }; }
   )
 ];
 
 // generates (pseudo-)random initial activity state (active or inactive)
-const generateInitialActivity = () => new Array(100).fill(0).map((_, index) => Math.random() < 0.5);
+const generateInitialActivity = () => { return new Array(100).fill(0).map((_, index) => { return Math.random() < 0.5; }); };
 
 // generates 100 agents with provided initial activity state
-const generateAgents = initialActivity => initialActivity.map((value, index) => {
-  const beliefs = { ...Belief('index', index), ...Belief('activityArray', initialActivity) };
-  return new Agent(index, beliefs, {}, plans);
-});
+const generateAgents = initialActivity => {
+  return initialActivity.map((value, index) => {
+    const beliefs = { ...Belief('index', index), ...Belief('activityArray', initialActivity) };
+    return new Agent(index, beliefs, {}, plans);
+  });
+};
 
 /*
 generate initial environment state
 */
-const generateState = initialActivity => ({
-  previousActivity: initialActivity,
-  nextActivity: []
-});
+const generateState = initialActivity => {
+  return {
+    previousActivity: initialActivity,
+    nextActivity: []
+  };
+};
 
 // state update function: collect future state of agents to assign new agent states next round
 const updateState = (actions, agentId, currentState) => {
   const stateUpdate = {
     ...currentState
   };
-  const agentActive = actions.some(action => action.nextRound === 'active');
+  const agentActive = actions.some(action => { return action.nextRound === 'active'; });
   stateUpdate.nextActivity.push(agentActive);
   if (agentId === '99') {
     return {
@@ -83,7 +87,7 @@ const updateState = (actions, agentId, currentState) => {
 
 /* the state filter provides the agent with the ``currentState`` activity array that changes at the
 end of each iteration */
-const stateFilter = state => ({ activityArray: state.previousActivity });
+const stateFilter = state => { return { activityArray: state.previousActivity }; };
 
 // render environment's ``currentState`` as grid to DOM
 const render = state => {

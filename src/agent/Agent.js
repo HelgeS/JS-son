@@ -29,14 +29,14 @@ function Agent (id, beliefs, desires, plans, determinePreferences) {
         this.intentions = Intentions(this.beliefs, this.desires, this.preferenceFunction);
       }
       return this.plans.map(
-        plan => plan.run(this.intentions)
+        plan => { return plan.run(this.intentions); }
       ).filter(
-        result => result !== null
+        result => { return result !== null; }
       );
     }
   };
-  this.stop = () => (this.isActive = false);
-  this.start = () => (this.isActive = true);
+  this.stop = () => { return (this.isActive = false); };
+  this.start = () => { return (this.isActive = true); };
 }
 
 module.exports = Agent;

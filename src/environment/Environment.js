@@ -11,17 +11,17 @@ function Environment (
   agents,
   state,
   update,
-  render = state => console.log(state),
-  stateFilter = state => state
+  render = state => { return console.log(state); },
+  stateFilter = state => { return state; }
 ) {
   this.agents = {};
-  agents.forEach(agent => (this.agents[agent.id] = agent));
+  agents.forEach(agent => { return (this.agents[agent.id] = agent); });
   this.state = state;
   this.update = update;
   this.render = render;
   this.stateFilter = stateFilter;
   this.history = [];
-  this.reset = () => (this.history = []);
+  this.reset = () => { return (this.history = []); };
   this.run = iterations => {
     this.history.push(this.state);
     const run = () => {

@@ -3,6 +3,9 @@ rules:
   semi:
     - error
     - always
+  arrow-body-style:
+    - error
+    - always
 plugins:
   - jasmine
 env:

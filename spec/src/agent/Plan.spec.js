@@ -8,9 +8,11 @@ const {
 } = require('../../mocks/human');
 
 describe('Plan / run()', () => {
-  const praiseDog = Plan(intentions => intentions.praiseDog, () => ({
-    actions: ['Good dog!']
-  }));
+  const praiseDog = Plan(intentions => { return intentions.praiseDog; }, () => {
+    return {
+      actions: ['Good dog!']
+    };
+  });
 
   it('should return ``null`` if head does not resolve to ``true``', () => {
     beliefs.dogHungry = true;

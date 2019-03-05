@@ -43,12 +43,12 @@ The porter has the following plans:
 */
 const plansPorter = [
   Plan(
-    beliefs => !beliefs.door.locked && beliefs.requests.includes('lock'),
-    () => [{ door: 'lock' }]
+    beliefs => { return !beliefs.door.locked && beliefs.requests.includes('lock'); },
+    () => { return [{ door: 'lock' }]; }
   ),
   Plan(
-    beliefs => beliefs.door.locked && beliefs.requests.includes('unlock'),
-    () => [{ door: 'unlock' }]
+    beliefs => { return beliefs.door.locked && beliefs.requests.includes('unlock'); },
+    () => { return [{ door: 'unlock' }]; }
   )
 ];
 
@@ -71,12 +71,12 @@ Next, we create the paranoid agent with the following plans:
 */
 const plansParanoid = [
   Plan(
-    beliefs => !beliefs.door.locked,
-    () => [{ request: 'lock' }]
+    beliefs => { return !beliefs.door.locked; },
+    () => { return [{ request: 'lock' }]; }
   ),
   Plan(
-    beliefs => beliefs.door.locked,
-    () => [{ announce: 'Thanks for locking the door!' }]
+    beliefs => { return beliefs.door.locked; },
+    () => { return [{ announce: 'Thanks for locking the door!' }]; }
   )
 ];
 
@@ -95,12 +95,12 @@ It has these plans:
 */
 const plansClaustrophobe = [
   Plan(
-    beliefs => beliefs.door.locked,
-    () => [{ request: 'unlock' }]
+    beliefs => { return beliefs.door.locked; },
+    () => { return [{ request: 'unlock' }]; }
   ),
   Plan(
-    beliefs => !beliefs.door.locked,
-    () => [{ announce: 'Thanks for unlocking the door!' }]
+    beliefs => { return !beliefs.door.locked; },
+    () => { return [{ announce: 'Thanks for unlocking the door!' }]; }
   )
 ];
 
@@ -126,26 +126,26 @@ const updateState = (actions, agentId, currentState) => {
     requests: currentState.requests
   };
   actions.forEach(action => {
-    if (action.some(action => action.door === 'lock')) {
+    if (action.some(action => { return action.door === 'lock'; })) {
       stateUpdate.door = { locked: true };
       stateUpdate.requests = [];
       console.log(`${agentId}: Lock door`);
     }
-    if (action.some(action => action.door === 'unlock')) {
+    if (action.some(action => { return action.door === 'unlock'; })) {
       stateUpdate.door = { locked: false };
       stateUpdate.requests = [];
       console.log(`${agentId}: Unlock door`);
     }
-    if (action.some(action => action.request === 'lock')) {
+    if (action.some(action => { return action.request === 'lock'; })) {
       stateUpdate.requests.push('lock');
       console.log(`${agentId}: Request: lock door`);
     }
-    if (action.some(action => action.request === 'unlock')) {
+    if (action.some(action => { return action.request === 'unlock'; })) {
       stateUpdate.requests.push('unlock');
       console.log(`${agentId}: Request: unlock door`);
     }
-    if (action.some(action => action.announce)) {
-      console.log(`${agentId}: ${action.find(action => action.announce).announce}`);
+    if (action.some(action => { return action.announce; })) {
+      console.log(`${agentId}: ${action.find(action => { return action.announce; }).announce}`);
     }
   });
   return stateUpdate;
@@ -157,7 +157,7 @@ which determines how the state update should be shared with the agents.
 However, in our case we simply communicate the whole state update to all agents,
 which is also the default behavior of the environment, if no ``stateFilter`` function is specified.
 */
-const stateFilter = state => state;
+const stateFilter = state => { return state; };
 
 /* We instantiate the environment with the specified agents, state, update function, and filter
 function:

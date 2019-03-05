@@ -6,7 +6,7 @@ describe('Desire()', () => {
   const beliefs = { ...Belief('dogNice', true) };
 
   it('should create a new desire with the specified key and value', () => {
-    const desire = Desire('playWithDog', beliefs => beliefs.dogNice);
+    const desire = Desire('playWithDog', beliefs => { return beliefs.dogNice; });
     expect(desire.playWithDog(beliefs)).toBe(true);
   });
 
@@ -18,7 +18,7 @@ describe('Desire()', () => {
 
   it('should not throw warning if desire body is a function', () => {
     // eslint-disable-next-line no-unused-vars
-    const validDesire = Desire('playWithDog', beliefs => beliefs.dogNice);
+    const validDesire = Desire('playWithDog', beliefs => { return beliefs.dogNice; });
     expect(console.warn).not.toHaveBeenCalledWith({});
   });
 });

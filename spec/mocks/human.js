@@ -8,27 +8,33 @@ const beliefs = {
 };
 
 const desires = {
-  ...Desire('praiseDog', beliefs => beliefs.dogNice),
-  ...Desire('feedDog', beliefs => beliefs.dogNice && beliefs.dogHungry)
+  ...Desire('praiseDog', beliefs => { return beliefs.dogNice; }),
+  ...Desire('feedDog', beliefs => { return beliefs.dogNice && beliefs.dogHungry; })
 };
 
-const preferenceFunctionGen = (beliefs, desires) => desireKey => {
-  if (!desires[desireKey](beliefs)) {
-    return false;
-  } else if (desireKey === 'feedDog' || !desires['feedDog'](beliefs)) {
-    return true;
-  } else {
-    return false;
-  }
+const preferenceFunctionGen = (beliefs, desires) => {
+  return desireKey => {
+    if (!desires[desireKey](beliefs)) {
+      return false;
+    } else if (desireKey === 'feedDog' || !desires['feedDog'](beliefs)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 };
 
 const plans = [
-  Plan(intentions => intentions.praiseDog, () => ({
-    actions: ['Good dog!']
-  })),
-  Plan(intentions => intentions.feedDog, () => ({
-    actions: ['Here, take some food!']
-  }))
+  Plan(intentions => { return intentions.praiseDog; }, () => {
+    return {
+      actions: ['Good dog!']
+    };
+  }),
+  Plan(intentions => { return intentions.feedDog; }, () => {
+    return {
+      actions: ['Here, take some food!']
+    };
+  })
 ];
 
 module.exports = {

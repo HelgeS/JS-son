@@ -10,25 +10,31 @@ const dogBeliefs = {
 };
 
 const dogDesires = {
-  ...Desire('wagTail', beliefs => beliefs.recentlyPraised),
-  ...Desire('eat', beliefs => beliefs.foodAvailable && beliefs.dogHungry)
+  ...Desire('wagTail', beliefs => { return beliefs.recentlyPraised; }),
+  ...Desire('eat', beliefs => { return beliefs.foodAvailable && beliefs.dogHungry; })
 };
-const dogPreferenceFunctionGen = (beliefs, desires) => desireKey => {
-  if (!desires[desireKey](beliefs)) {
-    return false;
-  } else if (desireKey === 'eat' || !desires['eat'](beliefs)) {
-    return true;
-  } else {
-    return false;
-  }
+const dogPreferenceFunctionGen = (beliefs, desires) => {
+  return desireKey => {
+    if (!desires[desireKey](beliefs)) {
+      return false;
+    } else if (desireKey === 'eat' || !desires['eat'](beliefs)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 };
 const dogPlans = [
-  Plan(intentions => intentions.eat, () => ({
-    actions: ['Eat']
-  })),
-  Plan(intentions => intentions.wagTail, () => ({
-    actions: ['Wag tail']
-  }))
+  Plan(intentions => { return intentions.eat; }, () => {
+    return {
+      actions: ['Eat']
+    };
+  }),
+  Plan(intentions => { return intentions.wagTail; }, () => {
+    return {
+      actions: ['Wag tail']
+    };
+  })
 ];
 
 module.exports = {
